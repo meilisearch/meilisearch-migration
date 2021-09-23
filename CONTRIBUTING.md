@@ -65,8 +65,6 @@ _[Read more about this](https://github.com/meilisearch/integration-guides/blob/m
 
 You can publish the current draft release via the [GitHub interface](https://github.com/meilisearch/XXX/releases): on this page, click on `Edit` (related to the draft release) > update the description (be sure you apply [these recommandations](https://github.com/meilisearch/integration-guides/blob/main/guides/integration-release.md#writting-the-release-description)) > when you are ready, click on `Publish release`.
 
-A GitHub Action will be triggered and push the package to [\<Add the platform name here, e.g. npm>](\<Add URL to the platform here\>).
-
 <hr>
 
 Thank you again for reading this through, we can not wait to begin to work with you if you made your way through this contributing guide ❤️
