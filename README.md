@@ -28,7 +28,7 @@
 - [☝️ Requirements](#-Requirements)
 - [🚗 Usage](#-Usage)
 - [🎉 Features](#-features)
-- [Incompatible Versions](#-version-incompatibilities)
+- [💔 Incompatible Versions](#-version-incompatibilities)
 - [📖 Documentation](#-documentation)
 - [⚙️ Development Workflow and Contributing](#️-development-workflow-and-contributing)
 
@@ -138,7 +138,7 @@ sh update_meilisearch_version.sh v0.22.0
 
 The migration fails for whatever reason. The script uses the cached `v0.21.0` binary and the cached `data.ms` of the previous version to rollback to its original state.
 
-## Version incompatibilities
+## 💔 Version incompatibilities
 
 Incompatibility between versions happens in some specific cases. The breaking changes should be described in the CHANGELOG of the release.
 
