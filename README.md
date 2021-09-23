@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/meilisearch/integration-guides/blob/main/assets/logos/logo.svg" alt="MeiliSearch Cloud scripts" width="200" height="200" />
+  <img src="https://github.com/meilisearch/integration-guides/blob/main/assets/logos/logo.svg" alt="MeiliSearch Version Update Script" width="200" height="200" />
 </p>
 
 <h1 align="center">MeiliSearch Version Migration Script</h1>
