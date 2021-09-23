@@ -52,26 +52,25 @@ Some notes on GitHub PRs:
 
 ## Release Process (for internal team only)
 
-The release tags of this package follow exactly the MeiliSearch versions.<br>
-It means that, for example, the `v0.17.0` tag in this repository corresponds to the scripts for deploying MeiliSearch `v0.17.0`.
+MeiliSearch tools follow the [Semantic Versioning Convention](https://semver.org/).
 
-This repository currently does not provide any automated way to test and release the cloud scripts.<br>
-**Please, follow carefully the steps in the next sections before any release.**
+### Automation to Rebase and Merge the PRs <!-- omit in toc -->
 
-### Release <!-- omit in TOC -->
+This project integrates a bot that helps us manage pull requests merging.<br>
+_[Read more about this](https://github.com/meilisearch/integration-guides/blob/main/guides/bors.md)._
 
-1.  Create a PR pointing to `main` branch and merge it.
+### Automated Changelogs <!-- omit in toc -->
 
-2.  Move the tag to the last commit of the `main` branch.
+This project integrates a tool to create automated changelogs.<br>
+_[Read more about this](https://github.com/meilisearch/integration-guides/blob/main/guides/release-drafter.md)._
 
-```bash
-$ git tag -d vX.X.X
-$ git push --delete origin vX.X.X
-$ git checkout main
-$ git pull origin main
-$ git tag vX.X.X
-$ git push origin vX.X.X
-```
+### How to Publish the Release <!-- omit in toc -->
+
+⚠️ Before doing anything, make sure you got through the guide about [Releasing an Integration](https://github.com/meilisearch/integration-guides/blob/main/guides/integration-release.md).
+
+You can publish the current draft release via the [GitHub interface](https://github.com/meilisearch/XXX/releases): on this page, click on `Edit` (related to the draft release) > update the description (be sure you apply [these recommandations](https://github.com/meilisearch/integration-guides/blob/main/guides/integration-release.md#writting-the-release-description)) > when you are ready, click on `Publish release`.
+
+A GitHub Action will be triggered and push the package to [\<Add the platform name here, e.g. npm>](\<Add URL to the platform here\>).
 
 <hr>
 
