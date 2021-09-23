@@ -25,13 +25,13 @@
 
 ## Table of Contents <!-- omit in toc -->
 
-- [Requirements](#-Requirements)
-- [Usage](#-Usage
-- [Features](#-features)
+- [☝️ Requirements](#-Requirements)
+- [🚗 Usage](#-Usage)
+- [🎉 Features](#-features)
 - [📖 Documentation](#-documentation)
 - [⚙️ Development Workflow and Contributing](#️-development-workflow-and-contributing)
 
-## Requirements
+## ☝️ Requirements
 
 ### 1. Systemctl
 
@@ -71,7 +71,7 @@ If you don't have a running MeiliSearch instance, you can create one using one o
 
 Alternatively, by [downloading and running MeiliSearch](https://docs.meilisearch.com/learn/getting_started/installation.html#download-and-launch) on your own server and start it as a [systemctl service](https://www.freedesktop.org/software/systemd/man/systemctl.html).
 
-## Usage
+## 🚗 Usage
 
 ⚠️ In case of failure during the execution of the script and for security purposes, we strongly recommend [creating manually your own dump](https://docs.meilisearch.com/reference/features/dumps.html#creating-a-dump).
 
@@ -97,7 +97,7 @@ A release candidate:
 sh update_meilisearch_version.sh v0.22.0rc1
 ```
 
-## Features
+## 🎉 Features
 
 - [Automatic Dumps](#automatic-dumps) export and import in case of version incompatibility.
 - [Rollback](Rollback in case of failure) in case of failure.
