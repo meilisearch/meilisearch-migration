@@ -137,7 +137,15 @@ The migration fails for whatever reason. The script uses the cached `v0.21.0` bi
 
 ## Version incompatibilities
 
-If your settings are not compatible between versions, you will have to re-index your data as importing the dump will fail.
+Incompatibility between versions happens in some specific cases. The breaking changes should be described in the CHANGELOG of the release.
+
+In this case, an error will be thrown by MeiliSearch and the script will roll back to the version of MeiliSearch before launching the script.
+
+In order to do the update to the next version, you'll have to manually:
+
+- Export your data without using the dumps, for example by browsing your documents using [this route](https://docs.meilisearch.com/reference/api/documents.html#get-documents).
+- Download and launch the binary corresponding to the new version of MeiliSearch.
+- Re-index your data and the new settings in the new MeiliSearch instance.
 
 ## Gif example
 
