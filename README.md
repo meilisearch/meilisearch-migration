@@ -17,9 +17,9 @@
   <a href="https://github.com/meilisearch/meilisearch-migration/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-informational" alt="License"></a>
 </p>
 
-<p align="center">MeiliSearch tools for the Cloud</p>
+<p align="center">MeiliSearch Version Migration Script</p>
 
-**MeiliSearch Version Update Script** is a script that migrates your MeiliSearch from a version to another more recent version, it also works with release candidates.
+**MeiliSearch Version Migration Script** is a script that migrates your MeiliSearch from a version to another more recent version without losing data nor settings.
 
 **MeiliSearch** is an open-source search engine. [Discover what MeiliSearch is!](https://github.com/meilisearch/MeiliSearch)
 
