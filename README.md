@@ -28,6 +28,7 @@
 - [☝️ Requirements](#-Requirements)
 - [🚗 Usage](#-Usage)
 - [🎉 Features](#-features)
+- [Incompatible Versions](#-version-incompatibilities)
 - [📖 Documentation](#-documentation)
 - [⚙️ Development Workflow and Contributing](#️-development-workflow-and-contributing)
 
@@ -97,6 +98,8 @@ A release candidate:
 sh update_meilisearch_version.sh v0.22.0rc1
 ```
 
+![](../../assets/version_update.gif)
+
 ## 🎉 Features
 
 - [Automatic Dumps](#automatic-dumps) export and import in case of version incompatibility.
@@ -146,10 +149,6 @@ In order to do the update to the next version, you'll have to manually:
 - Export your data without using the dumps, for example by browsing your documents using [this route](https://docs.meilisearch.com/reference/api/documents.html#get-documents).
 - Download and launch the binary corresponding to the new version of MeiliSearch.
 - Re-index your data and the new settings in the new MeiliSearch instance.
-
-## Gif example
-
-![](../../assets/version_update.gif)
 
 ## 📖 Documentation
 
