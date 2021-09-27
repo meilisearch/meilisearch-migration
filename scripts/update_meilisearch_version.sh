@@ -198,7 +198,7 @@ fi
 
 echo "${INFO_LABEL}Stopping MeiliSearch Service to update the version."
 ## Stop meilisearch running
-systemctl stop meilisearch # stop le service pour pouvoir changer la version
+systemctl stop meilisearch # stop the service to update the version
 
 ## Move the binary of the current MeiliSearch version to the temp folder
 echo "${INFO_LABEL}Keep a temporary copy of previous MeiliSearch."
