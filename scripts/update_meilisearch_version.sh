@@ -49,7 +49,6 @@ systemctl_status() {
         fi
 
         if [ ! -z "$callback_2" ]; then
-            2
             $callback_2
         fi
 
@@ -116,7 +115,7 @@ echo "${SUCCESS_LABEL}Starting version update of MeiliSearch."
 systemctl_status exit
 
 # Check if version argument was provided on script launch
-check_args $# "MeiliSearch Version not provided as arg.\nUsage: sh update_meilisearch_version.sh [vX.X.X]"
+check_args $# "MeiliSearch version not provided as arg.\nUsage: sh update_meilisearch_version.sh [vX.X.X]"
 
 # Version to update MeiliSearch to.
 meilisearch_version=$1
@@ -201,7 +200,7 @@ echo "${INFO_LABEL}Stopping MeiliSearch Service to update the version."
 ## Stop meilisearch running
 systemctl stop meilisearch # stop le service pour pouvoir changer la version
 
-## Move le nouveau binaire
+## Move the binary of the current MeiliSearch version to the temp folder
 echo "${INFO_LABEL}Keep a temporary copy of previous MeiliSearch."
 mv /usr/bin/meilisearch /tmp
 
