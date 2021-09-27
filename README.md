@@ -74,7 +74,7 @@ Alternatively, by [downloading and running MeiliSearch](https://docs.meilisearch
 
 ## 🚗 Usage
 
-⚠️ In case of failure during the execution of the script and for security purposes, we strongly recommend [creating manually your own dump](https://docs.meilisearch.com/reference/features/dumps.html#creating-a-dump).
+⚠️ In case of failure during the execution of the script and for security purposes, we strongly recommend [creating manually your own dump](https://docs.meilisearch.com/reference/features/dumps.html#creating-a-dump). After creating a dump, the file is located at `/dumps` at the root of the server.
 
 To launch the script you should open the server using SSH and run the following command:
 
