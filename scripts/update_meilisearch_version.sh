@@ -63,7 +63,7 @@ delete_temporary_files() {
         echo "${SUCCESS_LABEL}Delete temporary meilisearch binary."
     fi
 
-    if [ -f "logs" ]; then
+    if [ -d "logs" ]; then
         rm logs
         echo "${SUCCESS_LABEL}Delete temporary logs file."
     fi
