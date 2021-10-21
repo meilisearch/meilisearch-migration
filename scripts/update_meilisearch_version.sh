@@ -38,7 +38,7 @@ previous_version_rollback() {
 
 # Check if MeiliSearch systemctl process is Active
 systemctl_status() {
-    systemctl status meilisearch | grep -E 'Active: active \(running\)' -q
+    systemctl status meilisearch | grep -E 'Active: active \(running\)'
     grep_status_code=$?
     callback_1=$1
     callback_2=$2
@@ -51,7 +51,6 @@ systemctl_status() {
         if [ ! -z "$callback_2" ]; then
             $callback_2
         fi
-
     fi
 }
 
@@ -79,7 +78,7 @@ delete_temporary_files() {
 # Check if MeiliSearch arguments are provided
 check_args() {
     if [ $1 -eq 0 ]; then
-        echo "${ERROR_LABEL}$1"
+        echo "${ERROR_LABEL}$2"
         exit
     fi
 }
@@ -212,63 +211,57 @@ cp meilisearch /usr/bin/meilisearch
 systemctl restart meilisearch
 echo "${INFO_LABEL}MeiliSearch $meilisearch_version is starting."
 
-if systemctl status meilisearch | grep -E 'Active: active \(running\)' -q; then
-    echo "${INFO_LABEL}Both MeiliSearch versions are compatible. No need to dump."
+# Stopping MeiliSearch Service
+systemctl stop meilisearch
+echo "${INFO_LABEL}Stop MeiliSearch $meilisearch_version service."
+
+# Keep cache of previous data.ms in case of failure
+cp -r /var/lib/meilisearch/data.ms /tmp/
+echo "${INFO_LABEL}Copy data.ms to be able to recover in case of failure."
+
+# Remove data.ms
+rm -rf /var/lib/meilisearch/data.ms
+echo "${INFO_LABEL}Delete current MeiliSearch's data.m."
+
+# Run MeiliSearch
+MEILI_IMPORT_DUMP="/dumps/$dump_id.dump"
+./meilisearch --db-path /var/lib/meilisearch/data.ms --env production --import-dump "/dumps/$dump_id.dump" --master-key $MEILISEARCH_MASTER_KEY 2>logs &
+echo "${INFO_LABEL}Run local $meilisearch_version binary importing the dump and creating the new data.ms."
+
+sleep 2
+
+# Needed conditions due to bug in MeiliSearch #1701
+if cat logs | grep "Error: No such file or directory (os error 2)" -q; then
+    # If dump was empty no import is needed
+    echo "${SUCCESS_LABEL}Empty database! Importing of no data done."
 else
-    echo "${INFO_LABEL}MeiliSearch versions are not compatible with each other."
-
-    # Stopping MeiliSearch Service
-    systemctl stop meilisearch
-    echo "${INFO_LABEL}Stop MeiliSearch $meilisearch_version service."
-
-    # Keep cache of previous data.ms in case of failure
-    cp -r /var/lib/meilisearch/data.ms /tmp/
-    echo "${INFO_LABEL}Copy data.ms to be able to recover in case of failure."
-
-    # Remove data.ms
-    rm -rf /var/lib/meilisearch/data.ms
-    echo "${INFO_LABEL}Delete current MeiliSearch's data.m."
-
-    # Run MeiliSearch
-    MEILI_IMPORT_DUMP="/dumps/$dump_id.dump"
-    ./meilisearch --db-path /var/lib/meilisearch/data.ms --env production --import-dump "/dumps/$dump_id.dump" --master-key $MEILISEARCH_MASTER_KEY 2>logs &
-    echo "${INFO_LABEL}Run local $meilisearch_version binary importing the dump and creating the new data.ms."
-
-    sleep 2
-
-    # Needed conditions due to bug in MeiliSearch #1701
-    if cat logs | grep "Error: No such file or directory (os error 2)" -q; then
-        # If dump was empty no import is needed
-        echo "${SUCCESS_LABEL}Empty database! Importing of no data done."
+    echo "${INFO_LABEL}Check if local $meilisearch_version started correctly."
+    # Check if local meilisearch started correctly `./meilisearch ..`
+    if ps | grep "meilisearch" -q; then
+        echo "${SUCCESS_LABEL}MeiliSearch started successfully and is importing the dump."
     else
-        echo "${INFO_LABEL}Check if local $meilisearch_version started correctly."
-        # Check if local meilisearch started correctly `./meilisearch ..`
-        if ps | grep "meilisearch" -q; then
-            echo "${SUCCESS_LABEL}MeiliSearch started successfully and is importing the dump."
-        else
-            echo "${ERROR_LABEL}MeiliSearch could not start: \n ${BRED}$(cat logs)${NC}." >&2
-            # In case of failed start rollback to initial version
-            previous_version_rollback
-        fi
-
-        ## Wait for pending dump indexation
-        until curl -X GET 'http://localhost:7700/health' -s >/dev/null; do
-            echo "${PENDING_LABEL}MeiliSearch is still indexing the dump."
-            sleep 2
-        done
-
-        echo "${SUCCESS_LABEL}MeiliSearch is done indexing the dump."
-        # Kill local MeiliSearch process
-        pkill meilisearch
-        echo "${INFO_LABEL}Kill local MeiliSearch process."
-
-        # Restart MeiliSearch
-        systemctl restart meilisearch
-        echo "${INFO_LABEL}MeiliSearch $meilisearch_version service is starting."
-        # In case of failed restart rollback to initial version
-        systemctl_status previous_version_rollback exit
-        echo "${SUCCESS_LABEL}MeiliSearch $meilisearch_version service started succesfully."
+        echo "${ERROR_LABEL}MeiliSearch could not start: \n ${BRED}$(cat logs)${NC}." >&2
+        # In case of failed start rollback to initial version
+        previous_version_rollback
     fi
+
+    ## Wait for pending dump indexation
+    until curl -X GET 'http://localhost:7700/health' -s >/dev/null; do
+        echo "${PENDING_LABEL}MeiliSearch is still indexing the dump."
+        sleep 2
+    done
+
+    echo "${SUCCESS_LABEL}MeiliSearch is done indexing the dump."
+    # Kill local MeiliSearch process
+    pkill meilisearch
+    echo "${INFO_LABEL}Kill local MeiliSearch process."
+
+    # Restart MeiliSearch
+    systemctl restart meilisearch
+    echo "${INFO_LABEL}MeiliSearch $meilisearch_version service is starting."
+    # In case of failed restart rollback to initial version
+    systemctl_status previous_version_rollback exit
+    echo "${SUCCESS_LABEL}MeiliSearch $meilisearch_version service started succesfully."
 fi
 
 # Delete temporary files to leave the environment the way it was initially
