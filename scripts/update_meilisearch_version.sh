@@ -221,7 +221,7 @@ echo "${INFO_LABEL}Copy data.ms to be able to recover in case of failure."
 
 # Remove data.ms
 rm -rf /var/lib/meilisearch/data.ms
-echo "${INFO_LABEL}Delete current MeiliSearch's data.m."
+echo "${INFO_LABEL}Delete current MeiliSearch's data.ms"
 
 # Run MeiliSearch
 MEILI_IMPORT_DUMP="/dumps/$dump_id.dump"
