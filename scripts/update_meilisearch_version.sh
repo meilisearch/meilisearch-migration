@@ -203,25 +203,17 @@ systemctl stop meilisearch # stop the service to update the version
 echo "${INFO_LABEL}Keep a temporary copy of previous MeiliSearch."
 mv /usr/bin/meilisearch /tmp
 
-## Copy
-echo "${INFO_LABEL}Update MeiliSearch version."
-cp meilisearch /usr/bin/meilisearch
-
-## Restart MeiliSearch
-systemctl restart meilisearch
-echo "${INFO_LABEL}MeiliSearch $meilisearch_version is starting."
-
-# Stopping MeiliSearch Service
-systemctl stop meilisearch
-echo "${INFO_LABEL}Stop MeiliSearch $meilisearch_version service."
-
 # Keep cache of previous data.ms in case of failure
 cp -r /var/lib/meilisearch/data.ms /tmp/
-echo "${INFO_LABEL}Copy data.ms to be able to recover in case of failure."
+echo "${INFO_LABEL}Keep a temporary copy of previous data.ms."
 
 # Remove data.ms
 rm -rf /var/lib/meilisearch/data.ms
 echo "${INFO_LABEL}Delete current MeiliSearch's data.ms"
+
+## Move new MeiliSearch binary to the systemctl directory containing the binary
+echo "${INFO_LABEL}Update MeiliSearch version."
+cp meilisearch /usr/bin/meilisearch
 
 # Run MeiliSearch
 MEILI_IMPORT_DUMP="/dumps/$dump_id.dump"
@@ -250,19 +242,20 @@ else
         echo "${PENDING_LABEL}MeiliSearch is still indexing the dump."
         sleep 2
     done
-
     echo "${SUCCESS_LABEL}MeiliSearch is done indexing the dump."
-    # Kill local MeiliSearch process
-    pkill meilisearch
-    echo "${INFO_LABEL}Kill local MeiliSearch process."
 
-    # Restart MeiliSearch
-    systemctl restart meilisearch
-    echo "${INFO_LABEL}MeiliSearch $meilisearch_version service is starting."
-    # In case of failed restart rollback to initial version
-    systemctl_status previous_version_rollback exit
-    echo "${SUCCESS_LABEL}MeiliSearch $meilisearch_version service started succesfully."
+    # Kill local MeiliSearch process
+    echo "${INFO_LABEL}Kill local MeiliSearch process."
+    pkill meilisearch
 fi
+
+## Restart MeiliSearch
+systemctl restart meilisearch
+echo "${INFO_LABEL}MeiliSearch $meilisearch_version is starting."
+
+# In case of failed restart rollback to initial version
+systemctl_status previous_version_rollback exit
+echo "${SUCCESS_LABEL}MeiliSearch $meilisearch_version service started succesfully."
 
 # Delete temporary files to leave the environment the way it was initially
 delete_temporary_files
