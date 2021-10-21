@@ -14,6 +14,7 @@ ERROR_LABEL="${BRED}error: ${NC}"
 SUCCESS_LABEL="${BGREEN}success: ${NC}"
 PENDING_LABEL="${BYELLOW}pending: ${NC}"
 INFO_LABEL="${BBLUE}info: ${NC}"
+WARNING_LABEL="${BYELLOW}warning: ${NC}"
 
 ## Utils Functions
 
@@ -32,7 +33,8 @@ previous_version_rollback() {
     systemctl_status exit
     echo "${SUCCESS_LABEL}Previous MeiliSearch version ${BPINK}$current_meilisearch_version${NC} restarted correctly with its data recovered." >&2
     delete_temporary_files
-    echo "${ERROR_LABEL}Update MeiliSearch from ${BPINK}$current_meilisearch_version${NC} to ${BPINK}$meilisearch_version${NC} failed. Rollback to previous version successfull." >&2
+    echo "${WARNING_LABEL}Update MeiliSearch from ${BPINK}$current_meilisearch_version${NC} to ${BPINK}$meilisearch_version${NC} failed. Rollback to previous version successfull." >&2
+    echo "${BGREEN}MeiliSearch service up and running in version ${NC} ${BPINK}$meilisearch_version${NC}."
     exit
 }
 
@@ -62,7 +64,7 @@ delete_temporary_files() {
         echo "${SUCCESS_LABEL}Delete temporary meilisearch binary."
     fi
 
-    if [ -d "logs" ]; then
+    if [ -f "logs" ]; then
         rm logs
         echo "${SUCCESS_LABEL}Delete temporary logs file."
     fi
@@ -216,7 +218,6 @@ echo "${INFO_LABEL}Update MeiliSearch version."
 cp meilisearch /usr/bin/meilisearch
 
 # Run MeiliSearch
-MEILI_IMPORT_DUMP="/dumps/$dump_id.dump"
 ./meilisearch --db-path /var/lib/meilisearch/data.ms --env production --import-dump "/dumps/$dump_id.dump" --master-key $MEILISEARCH_MASTER_KEY 2>logs &
 echo "${INFO_LABEL}Run local $meilisearch_version binary importing the dump and creating the new data.ms."
 
@@ -261,3 +262,4 @@ echo "${SUCCESS_LABEL}MeiliSearch $meilisearch_version service started succesful
 delete_temporary_files
 
 echo "${BGREEN}Migration complete. MeiliSearch is now in version ${NC} ${BPINK}$meilisearch_version${NC}."
+echo "${BGREEN}MeiliSearch service up and running in version ${NC} ${BPINK}$meilisearch_version${NC}."
