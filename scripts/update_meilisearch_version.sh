@@ -38,7 +38,7 @@ previous_version_rollback() {
 
 # Check if MeiliSearch systemctl process is Active
 systemctl_status() {
-    systemctl status meilisearch | grep -E 'Active: active \(running\)'
+    systemctl status meilisearch | grep -E 'Active: active \(running\)' -q
     grep_status_code=$?
     callback_1=$1
     callback_2=$2
