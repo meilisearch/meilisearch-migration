@@ -25,8 +25,8 @@
 
 ## Table of Contents <!-- omit in toc -->
 
-- [☝️ Requirements](#-Requirements)
-- [🚗 Usage](#-Usage)
+- [☝️ Requirements](#-requirements)
+- [🚗 Usage](#-usage)
 - [🎉 Features](#-features)
 - [💔 Incompatible Versions](#-version-incompatibilities)
 - [📖 Documentation](#-documentation)
@@ -103,7 +103,7 @@ sh update_meilisearch_version.sh v0.22.0rc1
 ## 🎉 Features
 
 - [Automatic Dumps](#automatic-dumps) export and import in case of version incompatibility.
-- [Rollback](Rollback in case of failure) in case of failure.
+- [Rollback](#rollback-in-case-of-failure) in case of failure.
 
 ### Automatic Dumps
 
