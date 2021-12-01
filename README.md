@@ -76,6 +76,12 @@ Alternatively, by [downloading and running MeiliSearch](https://docs.meilisearch
 
 ⚠️ In case of failure during the execution of the script and for security purposes, we strongly recommend [creating manually your own dump](https://docs.meilisearch.com/reference/features/dumps.html#creating-a-dump). After creating a dump, the file is located at `/dumps` at the root of the server.
 
+Download the script on your MeiliSearch server: 
+
+```bash
+curl https://raw.githubusercontent.com/meilisearch/meilisearch-migration/main/scripts/update_meilisearch_version.sh --output migration.sh --location
+```
+
 To launch the script you should open the server using SSH and run the following command:
 
 ```bash
