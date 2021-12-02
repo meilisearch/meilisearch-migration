@@ -69,7 +69,7 @@ delete_temporary_files() {
         echo "${SUCCESS_LABEL}Delete temporary logs file."
     fi
 
-    local dump_file="/dumps/$dump_id.dump"
+    local dump_file="/var/opt/meilisearch/dumps/$dump_id.dump"
     if [ -f $dump_file ]; then
         rm "$dump_file"
         echo "${SUCCESS_LABEL}Delete temporary dump file."
@@ -218,7 +218,7 @@ echo "${INFO_LABEL}Update MeiliSearch version."
 cp meilisearch /usr/bin/meilisearch
 
 # Run MeiliSearch
-./meilisearch --db-path /var/lib/meilisearch/data.ms --env production --import-dump "/dumps/$dump_id.dump" --master-key $MEILISEARCH_MASTER_KEY 2>logs &
+./meilisearch --db-path /var/lib/meilisearch/data.ms --env production --import-dump "/var/opt/meilisearch/dumps/$dump_id.dump" --master-key $MEILISEARCH_MASTER_KEY 2>logs &
 echo "${INFO_LABEL}Run local $meilisearch_version binary importing the dump and creating the new data.ms."
 
 sleep 2
