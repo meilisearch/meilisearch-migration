@@ -176,7 +176,7 @@ echo "${SUCCESS_LABEL}Meilisearch finished creating the dump: $dump_id."
 
 # Download Meilisearch of the right version
 echo "${INFO_LABEL}Downloading Meilisearch version ${BPINK}$meilisearch_version${NC}."
-response=$(curl "https://github.com/meilisearch/Meilisearch/releases/download/$meilisearch_version/meilisearch-linux-amd64" --output meilisearch --location -s --show-error)
+response=$(curl "https://github.com/meilisearch/meilisearch/releases/download/$meilisearch_version/meilisearch-linux-amd64" --output meilisearch --location -s --show-error)
 
 check_last_exit_status $? \
     "Request to download Meilisearch $meilisearch_version release failed." \
