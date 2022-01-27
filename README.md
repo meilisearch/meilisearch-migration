@@ -19,7 +19,7 @@
 
 <p align="center">🦜 Meilisearch script to update version and migrate data 🦜</p>
 
-**Meilisearch Version Migration Script** is a script that migrates your Meilisearch from a version to another more recent version without losing data nor settings.
+**Meilisearch Version Migration Script** is a script that migrates your Meilisearch from a version, v.0.22.0 or higher, to a newer version without losing data nor settings.
 
 **Meilisearch** is an open-source search engine. [Discover what Meilisearch is!](https://github.com/meilisearch/meilisearch)
 
@@ -54,7 +54,7 @@ By default all Meilisearch instances created using one of our cloud providers ar
 
 ### 3. A Running Meilisearch instance
 
-A Meilisearch instance should be running before launching the script. This can be checked using the following command:
+A Meilisearch instance with a version greater than v0.21 should be running before launching the script. This can be checked using the following command:
 
 ```bash
 systemctl status meilisearch
@@ -95,13 +95,13 @@ sh update_meilisearch_version meilisearch_version
 An official release:
 
 ```bash
-sh update_meilisearch_version.sh v0.22.0
+sh update_meilisearch_version.sh v0.24.0
 ```
 
 A release candidate:
 
 ```bash
-sh update_meilisearch_version.sh v0.22.0rc1
+sh update_meilisearch_version.sh v0.24.0rc1
 ```
 
 ![](../../assets/version_update.gif)
@@ -136,17 +136,19 @@ If something goes wrong during the version update process a rollback occurs:
 - Meilisearch is started again.
 
 Example:
-Your current version is `v0.21.0` you want to update Meilisearch to `v0.22.0`. Thus inside your server you import and launch the script
+Your current version is `v0.23.0` you want to update Meilisearch to `v0.24.0`. Thus inside your server you import and launch the script
 
 ```
-sh update_meilisearch_version.sh v0.22.0
+sh update_meilisearch_version.sh v0.24.0
 ```
 
-The migration fails for whatever reason. The script uses the cached `v0.21.0` binary and the cached `data.ms` of the previous version to rollback to its original state.
+The migration fails for whatever reason. The script uses the cached `v0.23.0` binary and the cached `data.ms` of the previous version to rollback to its original state.
 
 ## 💔 Version incompatibilities
 
-Incompatibility between versions happens in some specific cases. The breaking changes should be described in the CHANGELOG of the release.
+Versions that are lower than the v0.22.0 can not be migrated. 
+
+It may also happen that versions are incompatible with each other in some specific cases. The breaking changes are described in the CHANGELOG of the release.
 
 In this case, an error will be thrown by Meilisearch and the script will roll back to the version of Meilisearch before launching the script.
 
