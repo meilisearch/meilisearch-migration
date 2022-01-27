@@ -23,4 +23,4 @@ If applicable, add screenshots or logs to help explain your problem.
 **Environment (please complete the following information):**
 - OS and version: [e.g. Debian 9]
 - Browser: [e.g. Chrome version 90.0]
-- MeiliSearch version: [e.g. v.0.20.0]
+- Meilisearch version: [e.g. v.0.20.0]
