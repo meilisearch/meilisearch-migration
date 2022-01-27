@@ -142,7 +142,7 @@ The migration fails for whatever reason. The script uses the cached `v0.23.0` bi
 
 Versions that are lower than the v0.22.0 can not be migrated. 
 
-It may also happen that versions are incompatibility between each other in some specific cases. The breaking changes should be described in the CHANGELOG of the release.
+It may also happen that versions are incompatible with each other in some specific cases. The breaking changes are described in the CHANGELOG of the release.
 
 In this case, an error will be thrown by MeiliSearch and the script will roll back to the version of MeiliSearch before launching the script.
 
