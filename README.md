@@ -40,8 +40,8 @@ Currently the script only works in an environment in which Meilisearch is runnin
 
 ### 2. Correct data.ms path
 
-The Meilisearch's `data.ms` must be stored at the following address: `/var/lib/meilisearch/data.ms`.<br>
-To ensure this is the case, Meilisearch should have started with the following flags:`--db-path /var/lib/meilisearch/data.ms`
+The Meilisearch's `data.ms` must be stored at the following path: `/var/lib/meilisearch/data.ms`.<br>
+To ensure this is the case, Meilisearch should have started with the following flags: `--db-path /var/lib/meilisearch/data.ms`
 
 You can check the information by looking at the file located here `cat /etc/systemd/system/meilisearch.service`.<br>
 You should find a line with the specific command used.
@@ -50,7 +50,7 @@ You should find a line with the specific command used.
 ExecStart=/usr/bin/meilisearch --db-path /var/lib/meilisearch/data.ms --env production
 ```
 
-By default all Meilisearch instances created using one of our cloud providers are storing `data.ms` in this repository.
+By default all Meilisearch instances created using one of our cloud providers are storing `data.ms` in this directory.
 
 ### 3. A Running Meilisearch instance
 
