@@ -85,7 +85,7 @@ curl https://raw.githubusercontent.com/meilisearch/meilisearch-migration/main/sc
 To launch the script you should open the server using SSH and run the following command:
 
 ```bash
-sh update_meilisearch_version meilisearch_version
+sh migration.sh meilisearch_version
 ```
 
 - `meilisearch_version`: the Meilisearch version formatted like this: `vX.X.X`
