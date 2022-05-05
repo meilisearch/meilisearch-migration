@@ -125,7 +125,7 @@ echo "${SUCCESS_LABEL}Requested Meilisearch version: ${BPINK}$meilisearch_versio
 
 # Current Meilisearch version
 current_meilisearch_version=$(
-    curl -X GET 'http://localhost:7700/version' --header "X-Meili-API-Key: $MEILISEARCH_MASTER_KEY" -s --show-error |
+    curl -X GET 'http://localhost:7700/version' --header "Authorization: Bearer $MEILISEARCH_MASTER_KEY" -s --show-error |
         cut -d '"' -f 12
 )
 
@@ -139,7 +139,7 @@ echo "${SUCCESS_LABEL}Current running Meilisearch version: ${BPINK}$current_meil
 
 # Create dump for migration in case of incompatible versions
 echo "${INFO_LABEL}Creation of a dump in case new version does not have compatibility with the current Meilisearch."
-dump_return=$(curl -X POST 'http://localhost:7700/dumps' --header "X-Meili-API-Key: $MEILISEARCH_MASTER_KEY" --show-error -s)
+dump_return=$(curl -X POST 'http://localhost:7700/dumps' --header "Authorization: Bearer $MEILISEARCH_MASTER_KEY" --show-error -s)
 
 # Check if curl request was successfull.
 check_last_exit_status $? "Dump creation 'POST /dumps' request failed."
@@ -149,7 +149,7 @@ dump_id=$(echo $dump_return | cut -d '"' -f 4)
 echo "${INFO_LABEL}Creating dump id with id: $dump_id."
 
 # Check if curl call succeeded to avoid infinite loop. In case of fail exit and clean
-response=$(curl -X GET "http://localhost:7700/dumps/$dump_id/status" --header "X-Meili-API-Key: $MEILISEARCH_MASTER_KEY" --show-error -s)
+response=$(curl -X GET "http://localhost:7700/dumps/$dump_id/status" --header "Authorization: Bearer $MEILISEARCH_MASTER_KEY" --show-error -s)
 if echo response | grep '"status":"failed"' -q; then
     echo "${ERROR_LABEL}Meilisearch could not create the dump:\n ${response}" >&2
     delete_temporary_files
@@ -162,7 +162,7 @@ check_last_exit_status $? \
 
 # Wait for Dump to be created
 until curl -X GET "http://localhost:7700/dumps/$dump_id/status" \
-    --header "X-Meili-API-Key: $MEILISEARCH_MASTER_KEY" --show-error -s |
+    --header "Authorization: Bearer $MEILISEARCH_MASTER_KEY" --show-error -s |
     grep '"status":"done"' -q; do
     echo "${PENDING_LABEL}Meilisearch is still creating the dump: $dump_id."
     sleep 2
