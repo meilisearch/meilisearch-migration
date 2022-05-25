@@ -95,13 +95,13 @@ sh migration.sh meilisearch_version
 An official release:
 
 ```bash
-sh update_meilisearch_version.sh v0.24.0
+sh migration.sh v0.24.0
 ```
 
 A release candidate:
 
 ```bash
-sh update_meilisearch_version.sh v0.24.0rc1
+sh migration.sh v0.24.0rc1
 ```
 
 ![](../../assets/version_update.gif)
@@ -139,7 +139,7 @@ Example:
 Your current version is `v0.23.0` you want to update Meilisearch to `v0.24.0`. Thus inside your server you import and launch the script
 
 ```
-sh update_meilisearch_version.sh v0.24.0
+sh migration.sh v0.24.0
 ```
 
 The migration fails for whatever reason. The script uses the cached `v0.23.0` binary and the cached `data.ms` of the previous version to rollback to its original state.
