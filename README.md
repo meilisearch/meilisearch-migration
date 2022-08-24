@@ -97,7 +97,7 @@ If you want to run the script from an AWS instance and you are logged in as `adm
 sudo -E sh migration.sh meilisearch_version
 ```
 
-If you want to run the script from a GCP VM instance and you are logged in as a user, you will probably have to set the $MEILISEARCH_MASTER_KEY like:
+If you want to run the script from a GCP VM instance and you are logged in as a user, you probably have to set the $MEILISEARCH_MASTER_KEY like:
 ```bash
 export MEILISEARCH_MASTER_KEY=YOUR_API_KEY
 ```
