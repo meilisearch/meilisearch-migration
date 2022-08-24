@@ -92,7 +92,7 @@ sh migration.sh meilisearch_version
 
 **Note**
 
-If you want to run the script from an AWS instance and you are logged in as `admin`, you will probably have to use this command instead:
+If you want to run the script from an AWS instance and you are logged in as `admin`, you probably have to use this command instead:
 ```bash
 sudo -E sh migration.sh meilisearch_version
 ```
