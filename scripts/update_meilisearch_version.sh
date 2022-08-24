@@ -117,6 +117,7 @@ check_api_key() {
 # Current Running Meilisearch
 #
 
+# Confirm that the API key is defined in the env variables.
 check_api_key
 
 echo "${SUCCESS_LABEL}Starting version update of Meilisearch."
