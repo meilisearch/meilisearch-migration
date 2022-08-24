@@ -107,7 +107,7 @@ check_last_exit_status() {
 # Check if the API key is defined is the environment variable
 check_api_key() {
     if [ -z $MEILISEARCH_MASTER_KEY ]; then
-        echo "${WARNING_LABEL}MEILISEARCH_MASTER_KEY is not available in the environment variables if you have an api key you must set it with the following command\nexport MEILISEARCH_MASTER_KEY=YOUR_API_KEY"
+        echo "${WARNING_LABEL}MEILISEARCH_MASTER_KEY is not available in the environment variables. If you have an API key, set it with the following command 'export MEILISEARCH_MASTER_KEY=YOUR_API_KEY'"
     fi
 }
 
