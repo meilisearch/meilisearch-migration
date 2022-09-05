@@ -104,11 +104,21 @@ check_last_exit_status() {
     fi
 }
 
+# Check if the API key is defined is the environment variable
+check_api_key() {
+    if [ -z $MEILISEARCH_MASTER_KEY ]; then
+        echo "${WARNING_LABEL}MEILISEARCH_MASTER_KEY is not available in the environment variables. If you have an API key, set it with the following command 'export MEILISEARCH_MASTER_KEY=YOUR_API_KEY'"
+    fi
+}
+
 ## Main Script
 
 #
 # Current Running Meilisearch
 #
+
+# Confirm that the API key is defined in the env variables.
+check_api_key
 
 echo "${SUCCESS_LABEL}Starting version update of Meilisearch."
 

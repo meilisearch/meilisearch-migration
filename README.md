@@ -90,6 +90,22 @@ sh migration.sh meilisearch_version
 
 - `meilisearch_version`: the Meilisearch version formatted like this: `vX.X.X`
 
+**Note**
+
+If you want to run the script from an AWS instance and you are logged in as `admin`, you probably have to use this command instead:
+```bash
+sudo -E sh migration.sh meilisearch_version
+```
+
+If you want to run the script from a GCP VM instance and you are logged in as a user, you probably have to set the $MEILISEARCH_MASTER_KEY like:
+```bash
+export MEILISEARCH_MASTER_KEY=YOUR_API_KEY
+```
+Then run the command line as sudo:
+```bash
+sudo sh migration.sh meilisearch_version
+```
+
 ### Example:
 
 An official release:
