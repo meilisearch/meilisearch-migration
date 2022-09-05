@@ -30,6 +30,7 @@
 - [🎉 Features](#-features)
 - [💔 Incompatible Versions](#-version-incompatibilities)
 - [📖 Documentation](#-documentation)
+- [🤖 Compatibility with Meilisearch](#-compatibility-with-meilisearch)
 - [⚙️ Development Workflow and Contributing](#️-development-workflow-and-contributing)
 
 ## ☝️ Requirements
@@ -177,6 +178,10 @@ In order to do the update to the next version, you'll have to manually:
 ## 📖 Documentation
 
 See our [Documentation](https://docs.meilisearch.com/learn/tutorials/getting_started.html) or our [API References](https://docs.meilisearch.com/reference/api/).
+
+## 🤖 Compatibility with Meilisearch
+
+This package only guarantees the compatibility with the [version v0.28.0 of Meilisearch](https://github.com/meilisearch/meilisearch/releases/tag/v0.28.0).
 
 ## ⚙️ Development Workflow and Contributing
 
