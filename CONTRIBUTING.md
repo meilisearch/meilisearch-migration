@@ -63,7 +63,7 @@ Some notes on GitHub PRs:
 - All PRs must be reviewed and approved by at least one maintainer.
 - The PR title should be accurate and descriptive of the changes.
 
-## Release Process (for internal team only)
+## Release Process (for the internal team only)
 
 Meilisearch tools follow the [Semantic Versioning Convention](https://semver.org/).
 
@@ -76,8 +76,8 @@ _[Read more about this](https://github.com/meilisearch/integration-guides/blob/m
 
 ⚠️ Before doing anything, make sure you got through the guide about [Releasing an Integration](https://github.com/meilisearch/integration-guides/blob/main/guides/integration-release.md).
 
-You can publish the current draft release via the [GitHub interface](https://github.com/meilisearch/XXX/releases): on this page, click on `Edit` (related to the draft release) > update the description (be sure you apply [these recommandations](https://github.com/meilisearch/integration-guides/blob/main/guides/integration-release.md#writting-the-release-description)) > when you are ready, click on `Publish release`.
+You can publish the current draft release via the [GitHub interface](https://github.com/meilisearch/XXX/releases): on this page, click on `Edit` (related to the draft release) > update the description (be sure you apply [these recommendations](https://github.com/meilisearch/integration-guides/blob/main/guides/integration-release.md#writting-the-release-description)) > when you are ready, click on `Publish release`.
 
 <hr>
 
-Thank you again for reading this through, we can not wait to begin to work with you if you made your way through this contributing guide ❤️
+Thank you again for reading this through. We can not wait to begin to work with you if you make your way through this contributing guide ❤️
