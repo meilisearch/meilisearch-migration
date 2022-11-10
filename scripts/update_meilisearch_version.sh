@@ -276,3 +276,6 @@ echo "${SUCCESS_LABEL}Meilisearch $meilisearch_version service started succesful
 
 # Delete temporary files to leave the environment the way it was initially
 delete_temporary_files
+
+echo "${BGREEN}Migration complete. Meilisearch is now in version ${NC} ${BPINK}$meilisearch_version${NC}."
+echo "${BGREEN}Meilisearch service up and running in version ${NC} ${BPINK}$meilisearch_version${NC}."
