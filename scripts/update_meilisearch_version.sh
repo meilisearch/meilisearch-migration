@@ -69,7 +69,7 @@ delete_temporary_files() {
         echo "${SUCCESS_LABEL}Delete temporary logs file."
     fi
 
-    local dump_file="/var/opt/meilisearch/dumps/$dump_id.dump"
+    local dump_file="/dumps/$dump_uid.dump"
     if [ -f $dump_file ]; then
         rm "$dump_file"
         echo "${SUCCESS_LABEL}Delete temporary dump file."
@@ -154,12 +154,12 @@ dump_return=$(curl -X POST 'http://localhost:7700/dumps' --header "Authorization
 # Check if curl request was successfull.
 check_last_exit_status $? "Dump creation 'POST /dumps' request failed."
 
-# Get the dump id
-dump_id=$(echo $dump_return | cut -d '"' -f 4)
-echo "${INFO_LABEL}Creating dump id with id: $dump_id."
+# Get the task uid
+task_uid=$(echo $dump_return | grep -o -E "\"taskUid\":[0-9]+" | awk -F\: '{print $2}')
+echo "${INFO_LABEL}Creating dump with task uid: $task_uid."
 
 # Check if curl call succeeded to avoid infinite loop. In case of fail exit and clean
-response=$(curl -X GET "http://localhost:7700/dumps/$dump_id/status" --header "Authorization: Bearer $MEILISEARCH_MASTER_KEY" --show-error -s)
+response=$(curl -X GET "http://localhost:7700/tasks/$task_uid" --header "Authorization: Bearer $MEILISEARCH_MASTER_KEY" --show-error -s)
 if echo response | grep '"status":"failed"' -q; then
     echo "${ERROR_LABEL}Meilisearch could not create the dump:\n ${response}" >&2
     delete_temporary_files
@@ -167,18 +167,24 @@ if echo response | grep '"status":"failed"' -q; then
 fi
 
 check_last_exit_status $? \
-    "Dump status check 'POST /dumps/:dump_id/status' request failed." \
-    delete_temporary_files dump_id
+    "Dump status check 'GET /tasks/:task_uid' request failed." \
+    delete_temporary_files dump_uid
 
 # Wait for Dump to be created
-until curl -X GET "http://localhost:7700/dumps/$dump_id/status" \
+until curl -X GET "http://localhost:7700/tasks/$task_uid" \
     --header "Authorization: Bearer $MEILISEARCH_MASTER_KEY" --show-error -s |
-    grep '"status":"done"' -q; do
-    echo "${PENDING_LABEL}Meilisearch is still creating the dump: $dump_id."
+    grep '"status":"succeeded"' -q; do
+    echo "${PENDING_LABEL}Meilisearch is still creating the dump: $task_uid."
     sleep 2
 done
 
-echo "${SUCCESS_LABEL}Meilisearch finished creating the dump: $dump_id."
+# Get dump uid (next uses as dump name)
+succeeded_dump_return=$(curl -X GET "http://localhost:7700/tasks/$task_uid" --header "Authorization: Bearer $MEILISEARCH_MASTER_KEY" --show-error -s)
+
+# Set the dump uid
+dump_uid=$(echo $succeeded_dump_return | grep -o -E "\"dumpUid\":\"(.{8}-.{9})\"" | awk -F\: '{print $2}' | tr -d \")
+
+echo "${SUCCESS_LABEL}Meilisearch finished creating the task uid: $task_uid and dump uid: $dump_uid."
 
 #
 # New MeiliSsarch
@@ -228,7 +234,7 @@ echo "${INFO_LABEL}Update Meilisearch version."
 cp meilisearch /usr/bin/meilisearch
 
 # Run Meilisearch
-./meilisearch --db-path /var/lib/meilisearch/data.ms --env production --import-dump "/var/opt/meilisearch/dumps/$dump_id.dump" --master-key $MEILISEARCH_MASTER_KEY 2>logs &
+./meilisearch --db-path /var/lib/meilisearch/data.ms --env production --import-dump "/dumps/$dump_uid.dump" --master-key $MEILISEARCH_MASTER_KEY 2>logs &
 echo "${INFO_LABEL}Run local $meilisearch_version binary importing the dump and creating the new data.ms."
 
 sleep 2
