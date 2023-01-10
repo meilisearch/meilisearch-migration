@@ -278,7 +278,8 @@ else
     fi
 
     ## Wait for pending dump indexation
-    until curl -X GET 'http://localhost:7700/health' -s >/dev/null; do #FIXME: Avoid infinity loop see issue #45
+    #FIXME: Avoid infinite loop see issue #45
+    until curl -X GET 'http://localhost:7700/health' -s >/dev/null; do
         echo "${PENDING_LABEL}Meilisearch is still indexing the dump."
         sleep 2
     done
