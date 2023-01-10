@@ -133,7 +133,8 @@ meilisearch_version=$1
 
 echo "${SUCCESS_LABEL}Requested Meilisearch version: ${BPINK}$meilisearch_version${NC}."
 
-# Current Meilisearch version #FIXME: Should work without master key provided see issue #44
+# Current Meilisearch version
+# FIXME: Should work without master key provided see issue #44
 current_meilisearch_version=$(
     curl -X GET 'http://localhost:7700/version' --header "Authorization: Bearer $MEILISEARCH_MASTER_KEY" -s --show-error |
         cut -d '"' -f 12
