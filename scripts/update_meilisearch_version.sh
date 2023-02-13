@@ -22,19 +22,19 @@ WARNING_LABEL="${BYELLOW}warning: ${NC}"
 
 previous_version_rollback() {
 
-    echo "${ERROR_LABEL}Meilisearch update to $meilisearch_version failed." >&2
-    echo "${INFO_LABEL}Rollbacking to previous version ${BPINK}$current_meilisearch_version${NC}." >&2
-    echo "${INFO_LABEL}Recovering..." >&2
+    echo -e "${ERROR_LABEL}Meilisearch update to $meilisearch_version failed." >&2
+    echo -e "${INFO_LABEL}Rollbacking to previous version ${BPINK}$current_meilisearch_version${NC}." >&2
+    echo -e "${INFO_LABEL}Recovering..." >&2
     mv /tmp/meilisearch /usr/bin/meilisearch
-    echo "${SUCCESS_LABEL}Recover previous data.ms." >&2
+    echo -e "${SUCCESS_LABEL}Recover previous data.ms." >&2
     mv /tmp/data.ms /var/lib/meilisearch/data.ms
-    echo "${INFO_LABEL}Restarting Meilisearch." >&2
+    echo -e "${INFO_LABEL}Restarting Meilisearch." >&2
     systemctl restart meilisearch
     systemctl_status exit
-    echo "${SUCCESS_LABEL}Previous Meilisearch version ${BPINK}$current_meilisearch_version${NC} restarted correctly with its data recovered." >&2
+    echo -e "${SUCCESS_LABEL}Previous Meilisearch version ${BPINK}$current_meilisearch_version${NC} restarted correctly with its data recovered." >&2
     delete_temporary_files
-    echo "${WARNING_LABEL}Update Meilisearch from ${BPINK}$current_meilisearch_version${NC} to ${BPINK}$meilisearch_version${NC} failed. Rollback to previous version successfull." >&2
-    echo "${BGREEN}Meilisearch service up and running in version ${NC} ${BPINK}$meilisearch_version${NC}."
+    echo -e "${WARNING_LABEL}Update Meilisearch from ${BPINK}$current_meilisearch_version${NC} to ${BPINK}$meilisearch_version${NC} failed. Rollback to previous version successfull." >&2
+    echo -e "${BGREEN}Meilisearch service up and running in version ${NC} ${BPINK}$meilisearch_version${NC}."
     exit
 }
 
@@ -45,7 +45,7 @@ systemctl_status() {
     callback_1=$1
     callback_2=$2
     if [ $grep_status_code -ne 0 ]; then
-        echo "${ERROR_LABEL}Meilisearch Service is not Running. Please start Meilisearch." >&2
+        echo -e "${ERROR_LABEL}Meilisearch Service is not Running. Please start Meilisearch." >&2
         if [ ! -z "$callback_1" ]; then
             $callback_1
         fi
@@ -58,21 +58,21 @@ systemctl_status() {
 
 # Delete temporary files
 delete_temporary_files() {
-    echo "${INFO_LABEL}Cleaning temporary files..."
+    echo -e "${INFO_LABEL}Cleaning temporary files..."
     if [ -f "meilisearch" ]; then
         rm meilisearch
-        echo "${SUCCESS_LABEL}Delete temporary meilisearch binary."
+        echo -e "${SUCCESS_LABEL}Delete temporary meilisearch binary."
     fi
 
     if [ -f "logs" ]; then
         rm logs
-        echo "${SUCCESS_LABEL}Delete temporary logs file."
+        echo -e "${SUCCESS_LABEL}Delete temporary logs file."
     fi
 
     local dump_file="/var/opt/meilisearch/dumps/$dump_id.dump"
     if [ -f $dump_file ]; then
         rm "$dump_file"
-        echo "${SUCCESS_LABEL}Delete temporary dump file."
+        echo -e "${SUCCESS_LABEL}Delete temporary dump file."
     fi
 
 }
@@ -80,7 +80,7 @@ delete_temporary_files() {
 # Check if Meilisearch arguments are provided
 check_args() {
     if [ $1 -eq 0 ]; then
-        echo "${ERROR_LABEL}$2"
+        echo -e "${ERROR_LABEL}$2"
         exit
     fi
 }
@@ -93,7 +93,7 @@ check_last_exit_status() {
     callback_2=$4
 
     if [ $status -ne 0 ]; then
-        echo "${ERROR_LABEL}$message."
+        echo -e "${ERROR_LABEL}$message."
         if [ ! -z "$callback_1" ]; then
             ($callback_1)
         fi
@@ -107,7 +107,7 @@ check_last_exit_status() {
 # Check if the API key is defined is the environment variable
 check_api_key() {
     if [ -z $MEILISEARCH_MASTER_KEY ]; then
-        echo "${WARNING_LABEL}MEILISEARCH_MASTER_KEY is not available in the environment variables. If you have an API key, set it with the following command 'export MEILISEARCH_MASTER_KEY=YOUR_API_KEY'"
+        echo -e "${WARNING_LABEL}MEILISEARCH_MASTER_KEY is not available in the environment variables. If you have an API key, set it with the following command 'export MEILISEARCH_MASTER_KEY=YOUR_API_KEY'"
     fi
 }
 
@@ -120,7 +120,7 @@ check_api_key() {
 # Confirm that the API key is defined in the env variables.
 check_api_key
 
-echo "${SUCCESS_LABEL}Starting version update of Meilisearch."
+echo -e "${SUCCESS_LABEL}Starting version update of Meilisearch."
 
 # Check if Meilisearch Service is running
 systemctl_status exit
@@ -131,7 +131,7 @@ check_args $# "Meilisearch version not provided as arg.\nUsage: sh update_meilis
 # Version to update Meilisearch to.
 meilisearch_version=$1
 
-echo "${SUCCESS_LABEL}Requested Meilisearch version: ${BPINK}$meilisearch_version${NC}."
+echo -e "${SUCCESS_LABEL}Requested Meilisearch version: ${BPINK}$meilisearch_version${NC}."
 
 # Current Meilisearch version
 # FIXME: Should work without master key provided see issue #44
@@ -142,14 +142,14 @@ current_meilisearch_version=$(
 
 # Check if curl version request is successfull.
 check_last_exit_status $? "Version request 'GET /version' request failed."
-echo "${SUCCESS_LABEL}Current running Meilisearch version: ${BPINK}$current_meilisearch_version${NC}."
+echo -e "${SUCCESS_LABEL}Current running Meilisearch version: ${BPINK}$current_meilisearch_version${NC}."
 
 #
 # Back Up Dump
 #
 
 # Create dump for migration in case of incompatible versions
-echo "${INFO_LABEL}Creation of a dump in case new version does not have compatibility with the current Meilisearch."
+echo -e "${INFO_LABEL}Creation of a dump in case new version does not have compatibility with the current Meilisearch."
 dump_return=$(curl -X POST 'http://localhost:7700/dumps' --header "Authorization: Bearer $MEILISEARCH_MASTER_KEY" --show-error -s)
 
 # Check if curl request was successfull.
@@ -158,7 +158,7 @@ check_last_exit_status $? "Dump creation 'POST /dumps' request failed."
 if echo $current_meilisearch_version | grep -E "^[0].2[01234567]{1}.[0-9]+.*" -q; then
     # Get the dump id
     dump_id=$(echo $dump_return | cut -d '"' -f 4)
-    echo "${INFO_LABEL}Creating dump id with id: $dump_id."
+    echo -e "${INFO_LABEL}Creating dump id with id: $dump_id."
 
     # Wait for Dump to be created
     while true
@@ -173,16 +173,16 @@ if echo $current_meilisearch_version | grep -E "^[0].2[01234567]{1}.[0-9]+.*" -q
         elif cat curl_dump_creation_response | grep '"status":"failed"' -q; then
             rm curl_dump_creation_response
             delete_temporary_files
-            echo "${ERROR_LABEL}Meilisearch could not create the dump:\n ${response}" >&2
+            echo -e "${ERROR_LABEL}Meilisearch could not create the dump:\n ${response}" >&2
             exit
         fi
-        echo "${PENDING_LABEL}Meilisearch is still creating the dump: $dump_id."
+        echo -e "${PENDING_LABEL}Meilisearch is still creating the dump: $dump_id."
         sleep 2
     done
 else
     # Get the task uid
     task_uid=$(echo $dump_return | grep -o -E "\"taskUid\":[0-9]+" | awk -F\: '{print $2}')
-    echo "${INFO_LABEL}Creating dump with task uid: $task_uid."
+    echo -e "${INFO_LABEL}Creating dump with task uid: $task_uid."
 
     while true
     do
@@ -198,22 +198,22 @@ else
         elif cat curl_dump_creation_response | grep '"status":"failed"' -q; then
             rm curl_dump_creation_response
             delete_temporary_files
-            echo "${ERROR_LABEL} Failed to create the dump."
+            echo -e "${ERROR_LABEL} Failed to create the dump."
             exit
         fi
-        echo "${PENDING_LABEL}Meilisearch is still creating the dump with task uid: $task_uid."
+        echo -e "${PENDING_LABEL}Meilisearch is still creating the dump with task uid: $task_uid."
         sleep 2
     done
 fi
 
-echo "${SUCCESS_LABEL}Meilisearch finished creating the dump: $dump_id."
+echo -e "${SUCCESS_LABEL}Meilisearch finished creating the dump: $dump_id."
 
 #
 # New MeiliSsarch
 #
 
 # Download Meilisearch of the right version
-echo "${INFO_LABEL}Downloading Meilisearch version ${BPINK}$meilisearch_version${NC}."
+echo -e "${INFO_LABEL}Downloading Meilisearch version ${BPINK}$meilisearch_version${NC}."
 response=$(curl "https://github.com/meilisearch/meilisearch/releases/download/$meilisearch_version/meilisearch-linux-amd64" --output meilisearch --location -s --show-error)
 
 check_last_exit_status $? \
@@ -225,9 +225,9 @@ chmod +x meilisearch
 
 # Check if Meilisearch binary is not corrupted
 if file meilisearch | grep "ELF 64-bit LSB shared object" -q; then
-    echo "${SUCCESS_LABEL}Successfully downloaded Meilisearch version $meilisearch_version."
+    echo -e "${SUCCESS_LABEL}Successfully downloaded Meilisearch version $meilisearch_version."
 else
-    echo "${ERROR_LABEL}Meilisearch binary is corrupted.\n\
+    echo -e "${ERROR_LABEL}Meilisearch binary is corrupted.\n\
   It may be due to: \n\
   - Invalid version syntax. Provided: $meilisearch_version, expected: vX.X.X. ex: v0.22.0 \n\
   - Rate limiting from GitHub." >&2
@@ -235,45 +235,45 @@ else
     exit
 fi
 
-echo "${INFO_LABEL}Stopping Meilisearch Service to update the version."
+echo -e "${INFO_LABEL}Stopping Meilisearch Service to update the version."
 ## Stop meilisearch running
 systemctl stop meilisearch # stop the service to update the version
 
 ## Move the binary of the current Meilisearch version to the temp folder
-echo "${INFO_LABEL}Keep a temporary copy of previous Meilisearch."
+echo -e "${INFO_LABEL}Keep a temporary copy of previous Meilisearch."
 mv /usr/bin/meilisearch /tmp
 
 # Keep cache of previous data.ms in case of failure
 cp -r /var/lib/meilisearch/data.ms /tmp/
-echo "${INFO_LABEL}Keep a temporary copy of previous data.ms."
+echo -e "${INFO_LABEL}Keep a temporary copy of previous data.ms."
 
 # Remove data.ms
 rm -rf /var/lib/meilisearch/data.ms
-echo "${INFO_LABEL}Delete current Meilisearch's data.ms"
+echo -e "${INFO_LABEL}Delete current Meilisearch's data.ms"
 
 ## Move new Meilisearch binary to the systemctl directory containing the binary
-echo "${INFO_LABEL}Update Meilisearch version."
+echo -e "${INFO_LABEL}Update Meilisearch version."
 cp meilisearch /usr/bin/meilisearch
 
 # Run Meilisearch
 # TODO: `import-dump` may change name for v1, it should be added in the integration-guide issue
 # https://github.com/meilisearch/meilisearch/issues/3132
 ./meilisearch --db-path /var/lib/meilisearch/data.ms --env production --import-dump "/var/opt/meilisearch/dumps/$dump_id.dump" --master-key $MEILISEARCH_MASTER_KEY 2>logs &
-echo "${INFO_LABEL}Run local $meilisearch_version binary importing the dump and creating the new data.ms."
+echo -e "${INFO_LABEL}Run local $meilisearch_version binary importing the dump and creating the new data.ms."
 
 sleep 2
 
 # Needed conditions due to bug in Meilisearch #1701
 if cat logs | grep "Error: No such file or directory (os error 2)" -q; then
     # If dump was empty no import is needed
-    echo "${SUCCESS_LABEL}Empty database! Importing of no data done."
+    echo -e "${SUCCESS_LABEL}Empty database! Importing of no data done."
 else
-    echo "${INFO_LABEL}Check if local $meilisearch_version started correctly."
+    echo -e "${INFO_LABEL}Check if local $meilisearch_version started correctly."
     # Check if local meilisearch started correctly `./meilisearch ..`
     if ps | grep "meilisearch" -q; then
-        echo "${SUCCESS_LABEL}Meilisearch started successfully and is importing the dump."
+        echo -e "${SUCCESS_LABEL}Meilisearch started successfully and is importing the dump."
     else
-        echo "${ERROR_LABEL}Meilisearch could not start: \n ${BRED}$(cat logs)${NC}." >&2
+        echo -e "${ERROR_LABEL}Meilisearch could not start: \n ${BRED}$(cat logs)${NC}." >&2
         # In case of failed start rollback to initial version
         previous_version_rollback
     fi
@@ -281,13 +281,13 @@ else
     ## Wait for pending dump indexation
     #FIXME: Avoid infinite loop see issue #45
     until curl -X GET 'http://localhost:7700/health' -s >/dev/null; do
-        echo "${PENDING_LABEL}Meilisearch is still indexing the dump."
+        echo -e "${PENDING_LABEL}Meilisearch is still indexing the dump."
         sleep 2
     done
-    echo "${SUCCESS_LABEL}Meilisearch is done indexing the dump."
+    echo -e "${SUCCESS_LABEL}Meilisearch is done indexing the dump."
 
     # Kill local Meilisearch process
-    echo "${INFO_LABEL}Kill local Meilisearch process."
+    echo -e "${INFO_LABEL}Kill local Meilisearch process."
     pkill meilisearch
 fi
 
@@ -299,14 +299,14 @@ fi
 
 ## Restart Meilisearch
 systemctl restart meilisearch
-echo "${INFO_LABEL}Meilisearch $meilisearch_version is starting."
+echo -e "${INFO_LABEL}Meilisearch $meilisearch_version is starting."
 
 # In case of failed restart rollback to initial version
 systemctl_status previous_version_rollback exit
-echo "${SUCCESS_LABEL}Meilisearch $meilisearch_version service started succesfully."
+echo -e "${SUCCESS_LABEL}Meilisearch $meilisearch_version service started succesfully."
 
 # Delete temporary files to leave the environment the way it was initially
 delete_temporary_files
 
-echo "${BGREEN}Migration complete. Meilisearch is now in version ${NC} ${BPINK}$meilisearch_version${NC}."
-echo "${BGREEN}Meilisearch service up and running in version ${NC} ${BPINK}$meilisearch_version${NC}."
+echo -e "${BGREEN}Migration complete. Meilisearch is now in version ${NC} ${BPINK}$meilisearch_version${NC}."
+echo -e "${BGREEN}Meilisearch service up and running in version ${NC} ${BPINK}$meilisearch_version${NC}."
