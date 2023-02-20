@@ -86,7 +86,7 @@ curl https://raw.githubusercontent.com/meilisearch/meilisearch-migration/main/sc
 To launch the script you should open the server using SSH and run the following command:
 
 ```bash
-sh migration.sh meilisearch_version
+bash migration.sh meilisearch_version
 ```
 
 - `meilisearch_version`: the Meilisearch version formatted like this: `vX.X.X`
@@ -95,7 +95,7 @@ sh migration.sh meilisearch_version
 
 If you want to run the script from an AWS instance and you are logged in as `admin`, you probably have to use this command instead:
 ```bash
-sudo -E sh migration.sh meilisearch_version
+sudo -E bash migration.sh meilisearch_version
 ```
 
 If you want to run the script from a GCP VM instance and you are logged in as a user, you probably have to set the $MEILISEARCH_MASTER_KEY like:
@@ -104,7 +104,7 @@ export MEILISEARCH_MASTER_KEY=YOUR_API_KEY
 ```
 Then run the command line as sudo:
 ```bash
-sudo sh migration.sh meilisearch_version
+sudo bash migration.sh meilisearch_version
 ```
 
 ### Example:
@@ -112,13 +112,13 @@ sudo sh migration.sh meilisearch_version
 An official release:
 
 ```bash
-sh migration.sh v0.24.0
+bash migration.sh v0.24.0
 ```
 
 A release candidate:
 
 ```bash
-sh migration.sh v0.24.0rc1
+bash migration.sh v0.24.0rc1
 ```
 
 ![](../../assets/version_update.gif)
@@ -156,7 +156,7 @@ Example:
 Your current version is `v0.23.0` you want to update Meilisearch to `v0.24.0`. Thus inside your server you import and launch the script
 
 ```
-sh migration.sh v0.24.0
+bash migration.sh v0.24.0
 ```
 
 The migration fails for whatever reason. The script uses the cached `v0.23.0` binary and the cached `data.ms` of the previous version to rollback to its original state.
@@ -181,7 +181,7 @@ See our [Documentation](https://docs.meilisearch.com/learn/tutorials/getting_sta
 
 ## 🤖 Compatibility with Meilisearch
 
-This package only guarantees the compatibility with the [version v0.28.0 of Meilisearch](https://github.com/meilisearch/meilisearch/releases/tag/v0.28.0).
+This package only guarantees the compatibility with the [version v1.0.0 of Meilisearch](https://github.com/meilisearch/meilisearch/releases/tag/v1.0.0).
 
 ## ⚙️ Development Workflow and Contributing
 
