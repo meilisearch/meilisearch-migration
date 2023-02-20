@@ -291,7 +291,7 @@ else
     pkill meilisearch
 fi
 
-regex_version="v([1-9]+\.[0-9]+\.[0-9])"
+regex_version="v[1-9]+\.[0-9]+\.[0-9]"
 if [[ $meilisearch_version =~ $regex_version ]]
 then
     sed -i 's/--dumps-dir/--dump-dir/' /etc/systemd/system/meilisearch.service
