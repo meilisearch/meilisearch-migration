@@ -279,10 +279,21 @@ else
     fi
 
     ## Wait for pending dump indexation
-    #FIXME: Avoid infinite loop see issue #45
-    until curl -X GET 'http://localhost:7700/health' -s >/dev/null; do
-        echo -e "${PENDING_LABEL}Meilisearch is still indexing the dump."
-        sleep 2
+    while true
+    do
+    	curl -X GET 'http://localhost:7700/health' \
+        --header "Authorization: Bearer $MEILISEARCH_MASTER_KEY" --show-error -s -i > curl_dump_index_response
+	cat curl_dump_index_response | grep "200 OK" -q
+	check_last_exit_status $? "Request to /health failed"
+	if cat curl_dump_index_response | grep '"status":"available"' -q; then
+		rm curl_dump_index_response
+		break
+	else
+		rm curl_dump_index_response
+		echo "${ERROR_LABEL} Failed to index the dump"
+		exit
+	fi
+	sleep 2
     done
     echo -e "${SUCCESS_LABEL}Meilisearch is done indexing the dump."
 
