@@ -2,19 +2,19 @@
 
 set -ueo pipefail
 
-# The master key of current and new Meilisearch versions
+# The master key of original and new Meilisearch versions
 MEILISEARCH_MASTER_KEY=
 # The system user for running the new Meilisearch version
 MEILISEARCH_USER=meilisearch
 
-# The dir where the current Meilisearch version stores dumps
-CURRENT_MEILISEARCH_DUMP_DIR=/var/opt/meilisearch/dumps
-# The port of the current Meilisearch version
-CURRENT_MEILISEARCH_PORT=7700
-# The name of the systemd service of the current Meilisearch version
-CURRENT_MEILISEARCH_SERVICE=meilisearch.service
-# To stop the current version of Meilisearch after making a dump.
-CURRENT_MEILISEARCH_STOP=false
+# The dir where the original Meilisearch version stores dumps
+ORIGINAL_MEILISEARCH_DUMP_DIR=/var/opt/meilisearch/dumps
+# The port of the original Meilisearch version
+ORIGINAL_MEILISEARCH_PORT=7700
+# The name of the systemd service of the original Meilisearch version
+ORIGINAL_MEILISEARCH_SERVICE=meilisearch.service
+# To stop routing traffic to the original version of Meilisearch before making a dump.
+ORIGINAL_MEILISEARCH_STOP=true
 
 # The port of the new Meilisearch version 
 NEW_MEILISEARCH_PORT=7701
@@ -22,30 +22,52 @@ NEW_MEILISEARCH_PORT=7701
 NEW_MEILISEARCH_VERSION=v1.0.0
 
 # The Nginx configuration file with Reverse Proxy settings for Meilisearch.
-# After the migration, the port number $CURRENT_MEILISEARCH_PORT will be 
+# After the migration, the port number $ORIGINAL_MEILISEARCH_PORT will be 
 # replaces with $NEW_MEILISEARCH_PORT and Nginx process will be reloaded.
 NGINX_CONFIG=/etc/nginx/sites-enabled/meilisearch
 
+
+
+trap 'error_handler' ERR SIGINT
+error_handler() { 
+  if [ "$ORIGINAL_MEILISEARCH_STOP" == "true" ]; then
+    systemctl start $ORIGINAL_MEILISEARCH_SERVICE
+    log "Restoring Nginx configuration file from $TMP_NGINX_CONFIG"
+    mv $TMP_NGINX_CONFIG $NGINX_CONFIG 
+    rmdir $(dirname $TMP_NGINX_CONFIG)
+    nginx -s reload
+    log "Restored."
+  fi    
+}
 log() { echo -e "[log]: $1" ;}
 
 # 
-# Validate input.
+# Validate input
 #
 
 [ -z "$MEILISEARCH_MASTER_KEY" ] && unset MEILISEARCH_MASTER_KEY
 
 # 
-# Create and prepare dump from the current Meilisearch version
+# Create and prepare dump from the original Meilisearch version
 #
 
+if [ "$ORIGINAL_MEILISEARCH_STOP" == "true" ]; then
+  log "Stop routing traffic to the original version from Nginx."
+  TMP_NGINX_CONFIG=$(mktemp -d)/${NGINX_CONFIG##*/}
+  mv $NGINX_CONFIG $TMP_NGINX_CONFIG
+  nginx -s reload
+  log "Nginx configuration file is moved to $TMP_NGINX_CONFIG"
+  log "Stopped."
+fi
+
 log "Start dump creation."
-response=$(curl -sS --fail -X POST "http://localhost:7700/dumps" -H "Authorization: Bearer $MEILISEARCH_MASTER_KEY")
+response=$(curl -sS --fail -X POST "http://localhost:$ORIGINAL_MEILISEARCH_PORT/dumps" -H "Authorization: Bearer $MEILISEARCH_MASTER_KEY")
 dump_uid=$(jq -r '.uid' <<< $response)
 log "Dump uid: $dump_uid"
 
 log "Wait until dump is ready."
 while true; do
-  response=$(curl -sS -X GET "http://localhost:7700/dumps/$dump_uid/status" -H "Authorization: Bearer $MEILISEARCH_MASTER_KEY")
+  response=$(curl -sS -X GET "http://localhost:$ORIGINAL_MEILISEARCH_PORT/dumps/$dump_uid/status" -H "Authorization: Bearer $MEILISEARCH_MASTER_KEY")
   status=$(jq -r '.status' <<< $response)
   if [ "$status" == "done" ]; then
     log "Dump is created."
@@ -55,12 +77,12 @@ while true; do
   sleep 5
 done
 
-dump_file="$CURRENT_MEILISEARCH_DUMP_DIR/$dump_uid.dump"
+dump_file="$ORIGINAL_MEILISEARCH_DUMP_DIR/$dump_uid.dump"
 log "Dump location: $dump_file"
 
-if [ "$CURRENT_MEILISEARCH_STOP" == "true" ]; then
-  log "Stop the current version of Meilisearch after making a dump."
-  systemctl stop $CURRENT_MEILISEARCH_SERVICE
+if [ "$ORIGINAL_MEILISEARCH_STOP" == "true" ]; then
+  log "Stop the original version of Meilisearch after making a dump."
+  systemctl stop $ORIGINAL_MEILISEARCH_SERVICE
   log "Stopped."
 fi
 
@@ -69,7 +91,7 @@ fi
 #
 
 log "Download Meilisearch $NEW_MEILISEARCH_VERSION binary."
-curl -sSL "https://github.com/meilisearch/meilisearch/releases/download/$NEW_MEILISEARCH_VERSION/meilisearch-linux-amd64" -o meilisearch-$NEW_MEILISEARCH_VERSION
+curl -sSL --fail "https://github.com/meilisearch/meilisearch/releases/download/$NEW_MEILISEARCH_VERSION/meilisearch-linux-amd64" -o meilisearch-$NEW_MEILISEARCH_VERSION
 chmod +x meilisearch-$NEW_MEILISEARCH_VERSION
 mv meilisearch-$NEW_MEILISEARCH_VERSION /usr/local/bin
 log "Done."
@@ -144,18 +166,23 @@ done
 log "The restoration process is finished."
 
 #
-# Route traffic to a new Meilisearch version by changing the port in the proxy_pass directive.
+# Route traffic to a new Meilisearch version by changing the port in the proxy_pass directive
 # 
 
+if [ "$ORIGINAL_MEILISEARCH_STOP" == "true" ]; then
+  mv $TMP_NGINX_CONFIG $NGINX_CONFIG 
+  rmdir $(dirname $TMP_NGINX_CONFIG)
+fi
+
 log "Update Nginx server block to direct traffic to Meilisearch $NEW_MEILISEARCH_VERSION"
-sed -i "s/$CURRENT_MEILISEARCH_PORT/$NEW_MEILISEARCH_PORT/g" $NGINX_CONFIG
+sed -i "s/$ORIGINAL_MEILISEARCH_PORT/$NEW_MEILISEARCH_PORT/g" $NGINX_CONFIG
 nginx -s reload
 
 #
-# Turn off the original version of Meilisearch.
+# Turn off the original version of Meilisearch
 # 
 
 log "Stop and disable the original Meilisearch version."
-systemctl stop $CURRENT_MEILISEARCH_SERVICE
-systemctl disable $CURRENT_MEILISEARCH_SERVICE
+systemctl stop $ORIGINAL_MEILISEARCH_SERVICE
+systemctl disable $ORIGINAL_MEILISEARCH_SERVICE
 log "Done."
