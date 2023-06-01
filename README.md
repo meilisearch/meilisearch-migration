@@ -6,7 +6,7 @@
 
 <h4 align="center">
   <a href="https://github.com/meilisearch/meilisearch">Meilisearch</a> |
-  <a href="https://docs.meilisearch.com">Documentation</a> |
+  <a href="https://www.meilisearch.com/docs">Documentation</a> |
   <a href="https://discord.meilisearch.com">Discord</a> |
   <a href="https://roadmap.meilisearch.com/tabs/1-under-consideration">Roadmap</a> |
   <a href="https://www.meilisearch.com">Website</a> |
@@ -71,11 +71,11 @@ If you don't have a running Meilisearch instance, you can create one using one o
 
 <br>
 
-Alternatively, by [downloading and running Meilisearch](https://www.meilisearch.com/docs/learn/getting_started/installation.html#download-and-launch) on your own server and start it as a [systemctl service](https://www.freedesktop.org/software/systemd/man/systemctl.html).
+Alternatively, by [downloading and running Meilisearch](https://www.meilisearch.com/docs/learn/getting_started/installation) on your own server and start it as a [systemctl service](https://www.freedesktop.org/software/systemd/man/systemctl.html).
 
 ## 🚗 Usage
 
-⚠️ In case of failure during the execution of the script and for security purposes, we strongly recommend [creating manually your own dump](https://www.meilisearch.com/docs/reference/features/dumps.html#creating-a-dump). After creating a dump, the file is located at `/dumps` at the root of the server.
+⚠️ In case of failure during the execution of the script and for security purposes, we strongly recommend [creating manually your own dump](https://www.meilisearch.com/docs/learn/advanced/dumps#creating-a-dump). After creating a dump, the file is located at `/dumps` at the root of the server.
 
 Download the script on your Meilisearch server: 
 
@@ -177,7 +177,7 @@ In order to do the update to the next version, you'll have to manually:
 
 ## 📖 Documentation
 
-See our [Documentation](https://www.meilisearch.com/docs/learn/tutorials/getting_started.html) or our [API References](https://www.meilisearch.com/docs/reference/api/).
+See our [Documentation](https://www.meilisearch.com/docs/learn/getting_started/quick_start) or our [API References](https://www.meilisearch.com/docs/reference/api/overview).
 
 ## 🤖 Compatibility with Meilisearch
 
