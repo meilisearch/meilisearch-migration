@@ -10,7 +10,7 @@
   <a href="https://discord.meilisearch.com">Discord</a> |
   <a href="https://roadmap.meilisearch.com/tabs/1-under-consideration">Roadmap</a> |
   <a href="https://www.meilisearch.com">Website</a> |
-  <a href="https://docs.meilisearch.com/faq">FAQ</a>
+  <a href="https://www.meilisearch.com/docs/faq">FAQ</a>
 </h4>
 
 <p align="center">
@@ -71,11 +71,11 @@ If you don't have a running Meilisearch instance, you can create one using one o
 
 <br>
 
-Alternatively, by [downloading and running Meilisearch](https://docs.meilisearch.com/learn/getting_started/installation.html#download-and-launch) on your own server and start it as a [systemctl service](https://www.freedesktop.org/software/systemd/man/systemctl.html).
+Alternatively, by [downloading and running Meilisearch](https://www.meilisearch.com/docs/learn/getting_started/installation.html#download-and-launch) on your own server and start it as a [systemctl service](https://www.freedesktop.org/software/systemd/man/systemctl.html).
 
 ## 🚗 Usage
 
-⚠️ In case of failure during the execution of the script and for security purposes, we strongly recommend [creating manually your own dump](https://docs.meilisearch.com/reference/features/dumps.html#creating-a-dump). After creating a dump, the file is located at `/dumps` at the root of the server.
+⚠️ In case of failure during the execution of the script and for security purposes, we strongly recommend [creating manually your own dump](https://www.meilisearch.com/docs/reference/features/dumps.html#creating-a-dump). After creating a dump, the file is located at `/dumps` at the root of the server.
 
 Download the script on your Meilisearch server: 
 
@@ -171,13 +171,13 @@ In this case, an error will be thrown by Meilisearch and the script will roll ba
 
 In order to do the update to the next version, you'll have to manually:
 
-- Export your data without using the dumps, for example by browsing your documents using [this route](https://docs.meilisearch.com/reference/api/documents.html#get-documents).
+- Export your data without using the dumps, for example by browsing your documents using [this route](https://www.meilisearch.com/docs/reference/api/documents#get-documents).
 - Download and launch the binary corresponding to the new version of Meilisearch.
 - Re-index your data and the new settings in the new Meilisearch instance.
 
 ## 📖 Documentation
 
-See our [Documentation](https://docs.meilisearch.com/learn/tutorials/getting_started.html) or our [API References](https://docs.meilisearch.com/reference/api/).
+See our [Documentation](https://www.meilisearch.com/docs/learn/tutorials/getting_started.html) or our [API References](https://www.meilisearch.com/docs/reference/api/).
 
 ## 🤖 Compatibility with Meilisearch
 
