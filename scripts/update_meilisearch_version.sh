@@ -69,7 +69,7 @@ delete_temporary_files() {
         echo -e "${SUCCESS_LABEL}Delete temporary logs file."
     fi
 
-    local dump_file="/var/opt/meilisearch/dumps/$dump_id.dump"
+    local dump_file="/dumps/$dump_id.dump"
     if [ -f $dump_file ]; then
         rm "$dump_file"
         echo -e "${SUCCESS_LABEL}Delete temporary dump file."
@@ -258,7 +258,7 @@ cp meilisearch /usr/bin/meilisearch
 # Run Meilisearch
 # TODO: `import-dump` may change name for v1, it should be added in the integration-guide issue
 # https://github.com/meilisearch/meilisearch/issues/3132
-./meilisearch --db-path /var/lib/meilisearch/data.ms --env production --import-dump "/var/opt/meilisearch/dumps/$dump_id.dump" --master-key $MEILISEARCH_MASTER_KEY 2>logs &
+./meilisearch --db-path /var/lib/meilisearch/data.ms --env production --import-dump "/dumps/$dump_id.dump" --master-key $MEILISEARCH_MASTER_KEY 2>logs &
 echo -e "${INFO_LABEL}Run local $meilisearch_version binary importing the dump and creating the new data.ms."
 
 sleep 2
@@ -309,6 +309,7 @@ then
 fi
 
 ## Restart Meilisearch
+systemctl daemon-reload
 systemctl restart meilisearch
 echo -e "${INFO_LABEL}Meilisearch $meilisearch_version is starting."
 
