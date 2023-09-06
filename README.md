@@ -17,6 +17,20 @@
   <a href="https://github.com/meilisearch/meilisearch-migration/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-informational" alt="License"></a>
 </p>
 
+---
+
+🚨 IMPORTANT NOTICE: Reduced Maintenance & Support 🚨
+
+*Dear Community,*
+
+*We'd like to share some updates regarding the future maintenance of this repository:*
+
+*Our team is small, and our availability will be reduced in the upcoming times. As such, response times might be slower, and less frequent updates can be expected.*
+
+*Seeking immediate support? Please join us on [our Discord channel](https://discord.meilisearch.com).*
+
+---
+
 <p align="center">🦜 Meilisearch script to update version and migrate data 🦜</p>
 
 **Meilisearch Version Migration Script** is a script that migrates your Meilisearch from a version, v.0.22.0 or higher, to a newer version without losing data nor settings.
