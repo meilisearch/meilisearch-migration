@@ -224,7 +224,7 @@ check_last_exit_status $? \
 chmod +x meilisearch
 
 # Check if Meilisearch binary is not corrupted
-if file meilisearch | grep "ELF 64-bit LSB shared object" -q; then
+if file meilisearch | grep "ELF 64-bit LSB" -q; then
     echo -e "${SUCCESS_LABEL}Successfully downloaded Meilisearch version $meilisearch_version."
 else
     echo -e "${ERROR_LABEL}Meilisearch binary is corrupted.\n\
